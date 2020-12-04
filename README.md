@@ -1,15 +1,15 @@
 # Classwork on Python, C, R, and MySQL
 
-CMSC132: Opbject-oriented programming II (Java)
+CMSC132 (Java)
 
-CMSC216: Introduction to Computer Systems (C)
-
-
-GEOG306: Quantitative methods for the geographic environmental sciences (R)
-
-GEOG376: Introduction to Computer Programming for GIS (Python)
-
-GEOG476: Object-oriented computer programming for GIS (Python)
+CMSC216 (C)
 
 
-INST327: Class on database design and modeling (MySQL)
+GEOG306 (R)
+
+GEOG376 (Python)
+
+GEOG476 (Python)
+
+
+INST327 (MySQL)
