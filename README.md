@@ -1,7 +1,7 @@
 # Classwork on Python, C, R, and MySQL
 CMSC132 (Java)
 
-CMSC216 (C)
+CMSC216 (C and some Assembly)
 
 GEOG306 (R)
 
