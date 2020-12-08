@@ -1,0 +1,13 @@
+#!/bin/bash
+
+clear
+make clean
+make
+
+./public01 > output01
+./public02 > output02
+./public03 > output03
+
+diff output01 public01.output
+diff output02 public02.output
+diff output03 public03.output

@@ -1,0 +1,51 @@
+# Name: Alexander Keller
+# UID: 113600425
+# DID: akeller5
+# Time last edited: 7:44 PM 7/26/2016
+
+main:
+	irmovl 0x1000, %esp		# Sets the stack pointer to 4096
+
+	rdint  %eax						# Reads in the fibbonaci number to count to
+	pushl  %eax						# Pushes the read in value onto the stack
+	call   fib       			# Calls the fib method
+	popl   %eax						# Pops the read in value onto the stack
+
+	wrint  %esi						# Prints the output of fib
+	irmovl 10, %eax				# Prints '\n' and halts (ends the program)
+	wrch   %eax
+	halt
+
+fib:
+	pushl	%ebp						# Saves the current base pointer(%ebp) to the stack
+	rrmovl	%esp, %ebp		# Puts the value of the stack pointer (%esp) into the base pointer (%ebp)
+	mrmovl 	8(%ebp), %edi	# it is 8 + (the location of %ebp) because before the pushed value is the return address
+
+	irmovl 	$0, %ebx			# If the number is equal to 0, go to End
+	addl   	%edi, %ebx
+	je     	End
+	irmovl 	$1, %ebx			# If the number is equal to 1, go to End
+	subl   	%edi, %ebx
+	je     	One
+
+	irmovl 	$1, %ecx			# Subtracts 1 from the input (fib(n-1)), and uses it as the new input
+	subl   	%ecx, %edi
+	pushl  	%edi
+	call   	fib
+	popl	%edi
+
+	subl   	%ecx, %edi		# Subtracts 1 again from the input (fib(n-2)), and uses it as the new input
+	pushl  	%edi
+	call   	fib
+	popl   	%edi
+	jmp 	End							# This is needed because if you use a number greater than 2, the code will just continue on to add 1
+
+One:										# This is called only when %edi (the currnet number) is one
+	addl %edi, %esi
+
+	End:									# Ends the function by putting the base stack pointer back to where it belongs
+	rrmovl %ebp, %esp
+	popl   %ebp
+	ret
+
+	.align 4

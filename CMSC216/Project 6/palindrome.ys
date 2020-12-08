@@ -1,0 +1,54 @@
+# Name: Alexander Keller
+# UID: 113600425
+# DID: akeller5
+# Time last edited: 7:44 PM 7/26/2016
+
+RLoop:													# This loop will be where we read in the chars
+	irmovl	$80, %ebx							# Checks if it's already read 20 characters (80 because the counter is done by 4) and if it has, it jumps to the checking loop
+	subl	%eax, %ebx
+	je	CLoop
+
+	rdch	%ecx
+	irmovl	$10, %ebx							# Null termination character
+	subl	%ecx, %ebx							# Subtracts the ascii value of input from the ascii value of '\n'
+
+	je	CLoop  										# If the result is not equal to 0, continue the loop
+	rmmovl 	%ecx, String(%eax)    # Moves the read in char into the String array at index eax/4
+	irmovl	$4, %ecx							# Increments the counter by 4 (for memory purposes)
+	addl	%ecx, %eax
+	jmp 	RLoop
+
+	CLoop:												# This loop will be where we check of String is a palindrome
+	irmovl $4, %edx
+	subl   %edx, %eax							# Decrements to the previous element, so that I can access the last char
+
+	mrmovl String(%esi), %ebx			# Loading the 1st elt in the array
+	mrmovl String(%eax), %ecx 		# Loading the last elt in the array
+
+	subl   %ecx, %ebx    					# If the elements are not equal, print no, they're not a palindrome
+	jne    No											# Increments esx and decrements edi by 1
+
+	addl   %edx, %esi							# Increments to the next element
+	rrmovl %eax, %edi							# Loads the temp var edi with eax
+	subl    %esi, %edi						# If it's reached the half way point (the one counting up is higher than the one counting down)
+	jle    Yes
+
+	jmp    CLoop
+
+Yes:
+	irmovl $89, %eax							# Prints 'Y'
+	wrch %eax
+	jmp End
+
+	No:	irmovl $78, %eax					# Prints 'N'
+	wrch %eax
+	jmp End
+
+	End:	irmovl $10, %eax				# Prints '\n'
+	wrch %eax
+
+halt
+
+	.align 4
+
+String:												#This is the array which I will be storing char's in

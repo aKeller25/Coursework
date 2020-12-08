@@ -1,0 +1,66 @@
+
+main:
+	irmovl	0x1000, %esp			# Sets the stack boundary pointer to the top, in order to keep its place
+	rrmovl	%esp, %ebp				# Moves the value of %esp into %ebp
+	irmovl 	$8, %ecx					# Allocates space for two local variables (4 bytes for each)
+	subl		%ecx, %esp
+
+	irmovl	$0, %ebx					# Moves 0 into %ebx to use as a counter
+	call	read
+
+	irmovl	$-1, %ecx					# Moves -1 into %ecx
+
+	mrmovl	Data(%ebx), %eax	# Moves the data in the Data label into %eax
+	addl		%eax, %edi				#
+	irmovl	$4, %ecx
+	divl		%ecx, %edx				# Divides the counter by 4
+	addl		%eax, %edi				# -1 + address of Data + counter (start point)
+
+	irmovl	$0, %ecx
+	pushl		%ecx							# Pushes 0
+	pushl		%edx							# Pushes the size of the array
+	pushl		%edi							# Pushes the start point of the array
+
+	call reversePrefixSum
+
+	popl		%ecx
+	popl		%edx
+	popl		%edi
+
+
+halt
+
+read:
+	pushl		%ebp							# Saves the boundary pointer on the stack
+	rrmovl	%esp, %ebp				# Sets the boundary pointer to the stack pointer
+	irmovl 	$4, %ecx					# Allocates space for one local variable (4 for each)
+	subl		%ecx, %esp
+
+	rdint		%eax							# Reads in a value
+	irmovl	$1, %ecx					# Adds 1 to the read in value
+	addl		%eax, %ecx
+	je	return								# Jump only if 1 + the read in value is equal to 0 (i.e. where the read in value is -1)
+
+
+	rmmovl	%eax, Data(%ebx)	# Puts the read in value into the %ebx/4 index
+	irmovl	$4, %ecx
+	addl		%ecx, %edx				# %edx will be the counter
+	jmp 	read
+
+reversePrefixSum:
+	pushl		%ebp							# Pushes the paramaters onto the stack
+	rrmovl	%esp, %ebp
+	mrmovl 	12(%ebp), %eax		# 8 because before the pushed value is the return address and the last value that was input was -1, which was the stopping value
+
+	addl		%ecx ,%edi
+	subl 		%ecx, %edx				# Subtracting by 4 until the counter is 0
+	je	return
+
+return:
+	rrmovl	%ebp, %esp
+	popl		%ebp
+	ret
+
+	.align 4
+
+Data:
